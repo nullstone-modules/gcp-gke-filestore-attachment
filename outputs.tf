@@ -20,7 +20,7 @@ output "volumes" {
 output "volume_mounts" {
   value = [
     {
-      name       = local.resource_name
+      name       = local.volume_name
       mount_path = var.mount_path
     }
   ]
