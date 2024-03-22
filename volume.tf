@@ -3,6 +3,27 @@ locals {
   volume_name       = local.filestore_name
   volume_claim_name = "pvc-${local.filestore_name}"
   volume_handle     = "modeInstance/${local.filestore_location}/${local.filestore_name}/${local.filestore_share_name}"
+
+  // We enabled the filestore CSI driver on our GKE cluster
+  // This automatically installs 5 storage classes:
+  // - enterprise-multishare-rwx
+  // - enterprise-rwx
+  // - premium-rwx
+  // - standard-rwx
+  // - zonal-rwx
+  // Based on the filestore's storage tier, we're going to try to choose the appropriate storage class
+  // If we don't find one, we fall back to "standard-rwx"
+  storage_tier_to_class = tomap({
+    "STANDARD" : "standard-rwx",
+    "PREMIUM" : "premium-rwx",
+    "BASIC_HDD" : "standard-rwx",
+    "BASIC_SSD" : "standard-rwx",
+    "HIGH_SCALE_SSD" : "premium-rwx",
+    "ZONAL" : "zonal-rwx",
+    "REGIONAL" : "zonal-rwx",
+    "ENTERPRISE" : "enterprise-rwx",
+  })
+  storage_class = coalesce(local.storage_tier_to_class[local.filestore_tier], "standard-rwx")
 }
 
 resource "kubernetes_persistent_volume_v1" "this" {
@@ -16,6 +37,7 @@ resource "kubernetes_persistent_volume_v1" "this" {
     access_modes                     = ["ReadWriteMany"]
     persistent_volume_reclaim_policy = "Retain"
     volume_mode                      = "Filesystem"
+    storage_class_name               = local.storage_class
 
     capacity = {
       storage = local.storage
@@ -42,8 +64,9 @@ resource "kubernetes_persistent_volume_claim_v1" "this" {
   }
 
   spec {
-    access_modes = ["ReadWriteMany"]
-    volume_name  = local.volume_name
+    access_modes       = ["ReadWriteMany"]
+    volume_name        = local.volume_name
+    storage_class_name = local.storage_class
 
     resources {
       requests = {

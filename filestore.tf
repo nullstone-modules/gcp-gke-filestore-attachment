@@ -5,6 +5,7 @@ data "ns_connection" "filestore" {
 
 locals {
   filestore_name       = data.ns_connection.filestore.outputs.filestore_name
+  filestore_tier       = data.ns_connection.filestore.outputs.filestore_tier
   filestore_location   = data.ns_connection.filestore.outputs.filestore_location
   filestore_capacity   = data.ns_connection.filestore.outputs.filestore_capacity
   filetore_ips         = data.ns_connection.filestore.outputs.filestore_ips
