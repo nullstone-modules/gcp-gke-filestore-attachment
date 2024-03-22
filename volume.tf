@@ -12,7 +12,6 @@ resource "kubernetes_persistent_volume_v1" "this" {
   }
 
   spec {
-    storage_class_name               = ""
     access_modes                     = ["ReadWriteMany"]
     persistent_volume_reclaim_policy = "Retain"
     volume_mode                      = "Filesystem"
@@ -41,9 +40,8 @@ resource "kubernetes_persistent_volume_claim_v1" "this" {
   }
 
   spec {
-    storage_class_name = ""
-    access_modes       = ["ReadWriteMany"]
-    volume_name        = local.volume_name
+    access_modes = ["ReadWriteMany"]
+    volume_name  = local.volume_name
 
     resources {
       requests = {
