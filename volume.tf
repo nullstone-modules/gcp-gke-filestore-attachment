@@ -7,8 +7,8 @@ locals {
 
 resource "kubernetes_persistent_volume_v1" "this" {
   metadata {
-    namespace = local.kubernetes_namespace
-    name      = local.volume_name
+    // cluster-wide resource
+    name = local.volume_name
   }
 
   spec {
