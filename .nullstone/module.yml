@@ -1,0 +1,14 @@
+org_name: nullstone
+name: gcp-gke-filestore-attachment
+friendly_name: Filestore attachment to GKE app
+description: Mounts a Google Filestore share as a volume on a GKE app
+category: capability
+subcategory: datastores
+provider_types:
+    - gcp
+platform: filestore
+subplatform: gke
+type: ""
+appCategories:
+    - container
+is_public: true

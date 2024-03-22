@@ -1,2 +1,3 @@
-# gcp-gke-filestore-attachment
-Mounts a filestore share to a GKE app
+# GKE Filestore Attachment
+
+Mounts a Google Filestore to a GKE app as a volume using Kubernetes PersistentVolume and PersistentVolumeClaim.
