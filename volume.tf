@@ -2,6 +2,7 @@ locals {
   storage           = "${local.filestore_capacity}Gi"
   volume_name       = "${local.filestore_name}-${random_string.resource_suffix.result}"
   volume_handle     = "modeInstance/${local.filestore_location}/${local.filestore_name}/${local.filestore_share_name}"
+  volume_claim_name = kubernetes_persistent_volume_claim_v1.this.metadata[0].name
 
   // We enabled the filestore CSI driver on our GKE cluster
   // This automatically installs 5 storage classes:
@@ -58,7 +59,7 @@ resource "kubernetes_persistent_volume_v1" "this" {
 resource "kubernetes_persistent_volume_claim_v1" "this" {
   metadata {
     namespace     = local.kubernetes_namespace
-    generate_name = local.filestore_name
+    generate_name = local.volume_name
     labels        = local.labels
   }
 
@@ -73,8 +74,4 @@ resource "kubernetes_persistent_volume_claim_v1" "this" {
       }
     }
   }
-}
-
-locals {
-  volume_claim_name = kubernetes_persistent_volume_claim_v1.this.metadata[0].name
 }
