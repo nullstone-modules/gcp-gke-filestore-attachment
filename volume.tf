@@ -1,6 +1,6 @@
 locals {
   storage           = "${local.filestore_capacity}Gi"
-  volume_name       = local.filestore_name
+  volume_name       = "${local.filestore_name}-${random_string.resource_suffix.result}"
   volume_claim_name = "pvc-${local.filestore_name}"
   volume_handle     = "modeInstance/${local.filestore_location}/${local.filestore_name}/${local.filestore_share_name}"
 
