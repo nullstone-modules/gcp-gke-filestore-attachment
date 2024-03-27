@@ -59,7 +59,7 @@ resource "kubernetes_persistent_volume_v1" "this" {
 resource "kubernetes_persistent_volume_claim_v1" "this" {
   metadata {
     namespace     = local.kubernetes_namespace
-    generate_name = local.volume_name
+    generate_name = "${local.filestore_name}-"
     labels        = local.labels
   }
 
